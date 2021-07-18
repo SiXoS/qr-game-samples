@@ -1,0 +1,101 @@
+
+init {
+	x = 10
+	y = 10
+	size = 20
+	halfSize = size/2
+	partsToAdd = 0
+	realCoordsPerSnakeCoord = size
+	windowSizeInSnakeCoords = 1000/realCoordsPerSnakeCoord
+	dirQueue = arrayList(~0)
+	dir = 1
+	framesToSkip = 4
+	frame = 0
+	appleExists = false
+	appleCoord = new pos(-1, -1)
+	apple = createEllipse(0, 0, size, size)
+	snakeParts = hashSet(new pos(x,y))
+	snake = linkedList(new pos(x,y))
+    emptyPositions = indexedHashSet(~new pos(0,0))
+    for (emptyX = 0; emptyX < windowSizeInSnakeCoords; emptyX++) {
+        for (emptyY = 0; emptyY < windowSizeInSnakeCoords; emptyY++) {
+            if (emptyX != x && emptyY != y) {
+                emptyPositions.add(new pos(emptyX, emptyY))
+            }
+        }
+    }
+}
+
+run {
+
+    if (!appleExists) {
+        appleCoord = emptyPositions.get(rand(0, emptyPositions.size() - 1))
+        apple.setPosX(appleCoord.x * realCoordsPerSnakeCoord + halfSize)
+        apple.setPosY(appleCoord.y * realCoordsPerSnakeCoord + halfSize)
+        appleExists = true
+    }
+
+    if (frame % framesToSkip == 0) {
+
+        if (appleCoord.x == x && appleCoord.y == y) {
+            appleExists = false
+            partsToAdd += 6
+            modifyScore(1)
+        }
+        if (dirQueue.size() > 0) {
+            dir = dirQueue.popFirst()
+        }
+        if (dir == 0) {
+            y--
+        } else if (dir == 1) {
+            x++
+        } else if (dir == 2) {
+            y++
+        } else if (dir == 3) {
+            x--
+        }
+        if (partsToAdd > 0) {
+            partsToAdd--
+        } else {
+            posToRemove = snake.popFirst()
+            snakeParts.remove(posToRemove)
+            emptyPositions.add(posToRemove)
+        }
+        posToAdd = new pos(x,y)
+        if (snakeParts.contains(posToAdd) || x > windowSizeInSnakeCoords || y > windowSizeInSnakeCoords || x < 0 || y < 0) {
+            lost(true)
+        }
+        snake.append(posToAdd)
+        snakeParts.add(posToAdd)
+        emptyPositions.remove(posToAdd)
+    }
+    frame++
+    for(part in snake) {
+        draw(createRectangle(part.x*realCoordsPerSnakeCoord + halfSize, part.y*realCoordsPerSnakeCoord + halfSize, size, size))
+    }
+    if (appleExists) {
+        draw(apple)
+    }
+    if (emptyPositions.size() == 0) {
+        won()
+    }
+}
+
+input (button, pressed) {
+    if (pressed) {
+        if (dirQueue.size() == 0) {
+            if (dir % 2 != button % 2) {
+                dirQueue.append(button % 4)
+            }
+        } else if (dirQueue.size() == 1) {
+            if (dirQueue.get(0) % 2 != button % 2) {
+                dirQueue.append(button % 4)
+            }
+        }
+    }
+}
+
+struct pos {
+    x: number
+    y: number
+}

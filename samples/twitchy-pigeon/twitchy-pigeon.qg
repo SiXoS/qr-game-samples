@@ -1,0 +1,70 @@
+
+init {
+	bird = createCompositeShape(300, 500, arrayList(
+		createEllipse(0, 0, 60, 40), 
+		createTriangle(36, 0, 20, 30).setRotationDeg(-90),
+		createTriangle(-36, -5, 10, 20).setRotationDeg(93),
+		createTriangle(-36, 5, 10, 20).setRotationDeg(87)))
+	bird.setAccelerationPerSecondY(1500)
+	obstacleTimer = 0
+	obstacleTimeout = 240
+	obstacleShapes = linkedList(~new obstacle(null: Shape, null: Shape, 0))
+}
+
+run {
+	if (obstacleTimer++ > obstacleTimeout) {
+		obstacleTimer = 0
+		obstacleShapes.append(createObstacle())
+	}
+	bird.setRotationDeg(-radToDeg(atan(bird.getSpeedPerSecondY()/600)))
+
+	if (bird.getPosY() > 985 || bird.getPosY() < 15) {
+		lost(true)
+	}
+
+	leftMostObstacle = obstacleShapes.peek()
+	if (leftMostObstacle != null: obstacle) {
+
+		obstaclePosX = leftMostObstacle.upper.getPosX()
+		if (obstaclePosX - 75 < bird.getPosX() && obstaclePosX + 75 > bird.getPosX() && (bird.getPosY() < leftMostObstacle.holeYpos + 15 || bird.getPosY() > leftMostObstacle.holeYpos+285)) {
+			lost(true)
+		}
+
+		if (obstaclePosX < -200) {
+			obstacleShapes.pop()
+			modifyScore(1)
+		}
+	}
+
+	draw(bird)
+	for (obstacle in obstacleShapes) {
+		draw(obstacle.upper)
+		draw(obstacle.lower)
+	}
+}
+
+input(button, pressedElseReleased) {
+	if (pressedElseReleased) {
+		bird.setSpeedPerSecondY(-800)
+	}
+}
+
+fun createObstacle(): obstacle {
+	holeSize = 300
+	yPos = rand(100, 900 - holeSize)
+	return new obstacle(
+		createPart(0, yPos),
+		createPart(yPos + holeSize, 1000 - (yPos + holeSize)),
+		yPos)
+}
+
+fun createPart(yPos: number, height: number): Shape {
+	return createRectangle(1200, yPos + height/2, 150, height)
+			.setSpeedPerSecondX(-250)
+}
+
+struct obstacle {
+	upper: Shape
+	lower: Shape
+	holeYpos: number
+}
