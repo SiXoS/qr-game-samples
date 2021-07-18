@@ -43,7 +43,7 @@ run {
             modifyScore(1)
         }
         if (dirQueue.size() > 0) {
-            dir = dirQueue.popFirst()
+            dir = dirQueue.pop()
         }
         if (dir == 0) {
             y--
@@ -57,7 +57,7 @@ run {
         if (partsToAdd > 0) {
             partsToAdd--
         } else {
-            posToRemove = snake.popFirst()
+            posToRemove = snake.pop()
             snakeParts.remove(posToRemove)
             emptyPositions.add(posToRemove)
         }
