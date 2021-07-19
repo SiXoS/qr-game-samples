@@ -1,4 +1,8 @@
 
+const OBSTACLE_WIDTH = 150
+const HALF_OBSTACLE_WIDTH = OBSTACLE_WIDTH/2
+const HOLE_SIZE = 300
+
 init {
 	bird = createCompositeShape(300, 500, arrayList(
 		createEllipse(0, 0, 60, 40), 
@@ -26,11 +30,11 @@ run {
 	if (leftMostObstacle != null: obstacle) {
 
 		obstaclePosX = leftMostObstacle.upper.getPosX()
-		if (obstaclePosX - 75 < bird.getPosX() && obstaclePosX + 75 > bird.getPosX() && (bird.getPosY() < leftMostObstacle.holeYpos + 15 || bird.getPosY() > leftMostObstacle.holeYpos+285)) {
+		if (obstaclePosX - HALF_OBSTACLE_WIDTH < bird.getPosX() && obstaclePosX + HALF_OBSTACLE_WIDTH > bird.getPosX() && (bird.getPosY() < leftMostObstacle.holeYpos + 15 || bird.getPosY() > leftMostObstacle.holeYpos+285)) {
 			lost(true)
 		}
 
-		if (obstaclePosX < -200) {
+		if (obstaclePosX < -OBSTACLE_WIDTH) {
 			obstacleShapes.pop()
 			modifyScore(1)
 		}
@@ -50,16 +54,15 @@ input(button, pressedElseReleased) {
 }
 
 fun createObstacle(): obstacle {
-	holeSize = 300
-	yPos = rand(100, 900 - holeSize)
+	yPos = rand(100, 900 - HOLE_SIZE)
 	return new obstacle(
 		createPart(0, yPos),
-		createPart(yPos + holeSize, 1000 - (yPos + holeSize)),
+		createPart(yPos + HOLE_SIZE, 1000 - (yPos + HOLE_SIZE)),
 		yPos)
 }
 
 fun createPart(yPos: number, height: number): Shape {
-	return createRectangle(1200, yPos + height/2, 150, height)
+	return createRectangle(1200, yPos + height/2, OBSTACLE_WIDTH, height)
 			.setSpeedPerSecondX(-250)
 }
 
