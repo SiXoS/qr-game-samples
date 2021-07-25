@@ -45,14 +45,11 @@ run {
         if (dirQueue.size() > 0) {
             dir = dirQueue.pop()
         }
-        if (dir == 0) {
-            y--
-        } else if (dir == 1) {
-            x++
-        } else if (dir == 2) {
-            y++
-        } else if (dir == 3) {
-            x--
+        when(dir) {
+            0 -> y--
+            1 -> x++
+            2 -> y++
+            3 -> x--
         }
         if (partsToAdd > 0) {
             partsToAdd--
