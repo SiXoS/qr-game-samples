@@ -7,7 +7,7 @@ init {
 	partsToAdd = 0
 	realCoordsPerSnakeCoord = size
 	windowSizeInSnakeCoords = 1000/realCoordsPerSnakeCoord
-	dirQueue = arrayList(~0)
+	dirQueue = arrayList(:number)
 	dir = 1
 	framesToSkip = 4
 	frame = 0
@@ -16,7 +16,7 @@ init {
 	apple = createEllipse(0, 0, size, size)
 	snakeParts = hashSet(new pos(x,y))
 	snake = linkedList(new pos(x,y))
-    emptyPositions = indexedHashSet(~new pos(0,0))
+    emptyPositions = indexedHashSet(:pos)
     for (emptyX = 0; emptyX < windowSizeInSnakeCoords; emptyX++) {
         for (emptyY = 0; emptyY < windowSizeInSnakeCoords; emptyY++) {
             if (emptyX != x && emptyY != y) {

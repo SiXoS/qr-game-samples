@@ -12,7 +12,7 @@ init {
 	bird.setAccelerationPerSecondY(1500)
 	obstacleTimer = 0
 	obstacleTimeout = 240
-	obstacleShapes = linkedList(~new obstacle(null: Shape, null: Shape, 0))
+	obstacleShapes = linkedList(:obstacle)
 }
 
 run {
