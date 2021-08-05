@@ -5,7 +5,8 @@ const HOLE_SIZE = 300
 
 init {
 	bird = createCompositeShape(300, 500, arrayList(
-		createEllipse(0, 0, 60, 40), 
+		createEllipse(0, 0, 60, 40),
+		createEllipse(17, -8, 6, 6).setColorBackground(),
 		createTriangle(36, 0, 20, 30).setRotationDeg(-90),
 		createTriangle(-36, -5, 10, 20).setRotationDeg(93),
 		createTriangle(-36, 5, 10, 20).setRotationDeg(87)))
