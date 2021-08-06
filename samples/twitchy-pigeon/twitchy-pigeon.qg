@@ -21,7 +21,7 @@ run {
 		obstacleTimer = 0
 		obstacleShapes.append(createObstacle())
 	}
-	bird.setRotationDeg(-radToDeg(atan(bird.getSpeedPerSecondY()/600)))
+	bird.setRotationDeg(-radToDeg(aTan(bird.getSpeedPerSecondY()/600)))
 
 	if (bird.getPosY() > 985 || bird.getPosY() < 15) {
 		lost(true)
